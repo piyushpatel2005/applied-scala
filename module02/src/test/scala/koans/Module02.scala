@@ -70,7 +70,7 @@ class Module02 extends KoanSuite with Matchers with SeveredStackTraces {
 
     def concatListsToArray(l1 : List[Int], l2 : List[Int]) : Array[Int] = {
       // replace this with the correct implementation
-      Array(0)
+      (l1 ++ l2).toArray
     }
 
     val oneTwo = List(1,2)
@@ -82,7 +82,7 @@ class Module02 extends KoanSuite with Matchers with SeveredStackTraces {
   test ("Take two arrays, and concatenate them in a list") {
     def concatArraysToList(a1 : Array[Int], a2 : Array[Int]) : List[Int] = {
       // replace this with the correct implementation
-      List(0)
+      (a1 ++ a2).toList
     }
 
     val oneTwo = Array(1,2)
@@ -101,10 +101,10 @@ class Module02 extends KoanSuite with Matchers with SeveredStackTraces {
     t._5 should be ("too")
 
     // Arity is the number of arguments
-    t.productArity should be (__)
+    t.productArity should be (5)
 
     // and you can iterate over the arguments too
-    t.productIterator.next should be (__)
+    t.productIterator.next should be (0)
   }
 
   test ("Map a tuple to strings") {
@@ -112,7 +112,7 @@ class Module02 extends KoanSuite with Matchers with SeveredStackTraces {
 
     // replace the following with the correct code to convert tuple t
     // to a list of strings
-    val l = Nil
+    val l = t._1.toString :: t._2.toString :: t._3.toString :: t._4.toString :: t._5 :: Nil
 
     l should be (List("0", "u", "8", "1", "too"))
   }
@@ -121,6 +121,7 @@ class Module02 extends KoanSuite with Matchers with SeveredStackTraces {
     var getSet = Set("Ready", "Steady")
 
     // Add a line below to satisfy the test
+    getSet += "Go!"
 
     getSet should be (Set("Ready", "Steady", "Go!"))
     
@@ -128,9 +129,10 @@ class Module02 extends KoanSuite with Matchers with SeveredStackTraces {
   }
 
   test ("Mutable set in a val") {
-    var getSet = scala.collection.mutable.Set("Ready", "Steady")
+    val getSet = scala.collection.mutable.Set("Ready", "Steady")
 
     // Add a line below to satisfy the test
+    getSet += "Go!"
 
     getSet should be (Set("Ready", "Steady", "Go!"))
 
@@ -144,15 +146,15 @@ class Module02 extends KoanSuite with Matchers with SeveredStackTraces {
     mutMap += (2 -> "Dos")
     mutMap += (3 -> "Tres")
 
-    mutMap(2) should be (__)
+    mutMap(2) should be ("Dos")
 
     mutMap += (2 -> "Two")
 
-    mutMap(2) should be (__)
+    mutMap(2) should be ("Two")
 
     // What happens if you uncomment the line below? Why?
-    // mutMap += (2 -> 2)
-    mutMap(2) should be (__)
+//     mutMap += (2 -> 2)
+    mutMap(2) should be ("Two")
   }
 
   test ("Mutable map in a val") {
@@ -162,18 +164,18 @@ class Module02 extends KoanSuite with Matchers with SeveredStackTraces {
     mutMap += (2 -> "Dos")
     mutMap += (3 -> "Tres")
 
-    mutMap(2) should be (__)
+    mutMap(2) should be ("Dos")
 
     mutMap(2) = "Two"
 
-    mutMap(2) should be (__)
+    mutMap(2) should be ("Two")
 
     mutMap += (2 -> "Deux")
 
-    mutMap(2) should be (__)
+    mutMap(2) should be ("Deux")
 
     // What happens if you uncomment the line below? Why?
-    // mutMap += (2 -> 2)
-    mutMap(2) should be (__)
+//     mutMap += (2 -> 2)
+    mutMap(2) should be ("Deux")
   }
 }

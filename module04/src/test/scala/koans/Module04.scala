@@ -17,13 +17,11 @@ class Module04 extends KoanSuite with Matchers with SeveredStackTraces {
     //
     // Hint: maybe recursion? List.head will give you the first value, List.tail will give you the rest
 
-    def max(numbers : List[Int]) = {
-      var maxSoFar = Int.MinValue
-
-      for (n <- numbers) {
-        if (n > maxSoFar) maxSoFar = n
+    @scala.annotation.tailrec
+    def max(numbers : List[Int], maxValue: Int = Int.MinValue): Int = {
+      if (numbers.isEmpty) maxValue else {
+        max(numbers.tail, if (numbers.head > maxValue) numbers.head else maxValue)
       }
-      maxSoFar
     }
 
     max(List(1, 2, 3, 4, 5)) should be (5)
@@ -40,7 +38,10 @@ class Module04 extends KoanSuite with Matchers with SeveredStackTraces {
     val fileList = (new java.io.File(dirPath)).listFiles
 
     // you need to replace this line with the real implementation
-    new Array[String](0)
+    for {
+    file <- fileList if file.getName.endsWith(".shkspr")
+    fileName = file.getName
+    } yield fileName
   }
   // question: can you guess why we define this method outside of the test below?
 
@@ -57,7 +58,7 @@ class Module04 extends KoanSuite with Matchers with SeveredStackTraces {
   // what you need
   def firstLineOfFile(filePath: String) : String = {
     // replace with the real implementation
-    ""
+    scala.io.Source.fromFile(filePath).getLines.next()
   }
 
   test ("First line of file") {
@@ -74,7 +75,7 @@ class Module04 extends KoanSuite with Matchers with SeveredStackTraces {
   // and then the last character is matched to either a '?' ("Question") or anything else ("Statement")
   // so that the test below passes
   def statementOrQuestion(str : String) : String = 
-    str
+    if (str.trim.endsWith("?")) "Question" else "Statement"
 
   test ("statement or question?") {
     statementOrQuestion("hello") should be ("Statement")
@@ -98,7 +99,13 @@ class Module04 extends KoanSuite with Matchers with SeveredStackTraces {
     // extra extra credit - can you find a way to do it without using either a var or a mutable Map?
     //var shksprMap = new scala.collection.immutable.HashMap[String, String]
 
-    val shksprMap = new scala.collection.immutable.HashMap[String, String]
+    val shksprMap = {
+
+      for {
+        file <- listShakespeareFiles(".")
+        stateOrQue = statementOrQuestion(firstLineOfFile(file))
+      } yield file -> stateOrQue
+    }.toMap
 
     shksprMap("caesar.shkspr") should be ("Statement")
     shksprMap("romeo.shkspr") should be ("Question")

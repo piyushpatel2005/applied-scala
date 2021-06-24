@@ -5,7 +5,7 @@ package koans
 import org.scalatest.Matchers
 import org.scalatest.SeveredStackTraces
 import support.KoanSuite
-import io.Source
+import scala.io.Source
 
 class Module04Solutions extends KoanSuite with Matchers with SeveredStackTraces {
 
