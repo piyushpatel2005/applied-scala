@@ -19,7 +19,11 @@ class Module05 extends KoanSuite with Matchers with SeveredStackTraces {
     // need to pass them in. The function should multiply the argument passed in by the multiplier var
 
     // UNCOMMENT TESTS
-    /*
+
+    def mult(x: Int): Int = {
+      multiplier * x
+    }
+
     mult(5) should be (15)
     mult(3) should be (9)
 
@@ -27,7 +31,7 @@ class Module05 extends KoanSuite with Matchers with SeveredStackTraces {
     multiplier = 5
     mult(5) should be (25)
     mult(3) should be (15)
-    */
+
   }
 
   test ("Filter numbers") {
@@ -37,8 +41,8 @@ class Module05 extends KoanSuite with Matchers with SeveredStackTraces {
     // to make the tests pass.
     // Just like in Java, % is the modulo operator
 
-    val onlyOdd = allNumbers.filter(x => false)
-    val onlyEven = allNumbers.filter(x => false)
+    val onlyOdd = allNumbers.filter(x => x % 2 == 1)
+    val onlyEven = allNumbers.filter(x => x % 2 == 0)
 
     onlyOdd should be (List(1,3,5,7))
     onlyEven should be (List(0,2,4,6))
@@ -47,11 +51,11 @@ class Module05 extends KoanSuite with Matchers with SeveredStackTraces {
   test ("Function with placeholder syntax") {
     // using placeholder syntax, define a val "mult" that multiplies 2 Ints together, then uncomment
     // the tests below and make sure they pass
+    val mult = (_: Int) * (_: Int)
 
-    /*
     mult(2, 4) should be (8)
     mult(10, 10) should be (100)
-    */
+
   }
 
   test ("Bounds limiter partial function") {
@@ -74,22 +78,27 @@ class Module05 extends KoanSuite with Matchers with SeveredStackTraces {
     // and upper bounds of 100, but with the middle value (to test) not yet bound (use a placeholder)
     // Then uncomment the tests below and make sure they pass
 
-    /*
+    def waterAsLiquid(x: Int): Int = boundToLimits(0, x, 100)
     waterAsLiquid(34) should be (34)
     waterAsLiquid(-10) should be (0)
     waterAsLiquid(400) should be (100)
-    */
+
   }
 
   test ("Multiply variable number of arguments") {
     // create a multipleDoubles method to satisfy the tests below, uncomment the tests and run them
     // to ensure it works
 
-    /*
+    def multiplyDoubles(values: Double*): Double = {
+      if (values.isEmpty) 1.0
+      else values.reduce((acc, num) => acc * num)
+    }
+
+
     multiplyDoubles(1.0, 2.0, 3.0) should be (6.0 +- 0.00001)
     multiplyDoubles(1.1, 2.2, 3.3, 4.4, 5.5, 6.6) should be (1275.52392 +- 0.00001)
     multiplyDoubles() should be (1.0)
-    */
+
 
     // extra credit, can you re-write the multiplyDoubles method to work without needing to use any vars?
   }
@@ -102,19 +111,26 @@ class Module05 extends KoanSuite with Matchers with SeveredStackTraces {
     // listOfLists("3","2","1") should give back: List(List("3","2","1"), List("2","1"), List("1"))
     // If you have trouble with the recursive call, check the argument expansion slide for help
     // Uncomment the tests below to make sure the method works.
-    
+    def listOfLists(args: String*): List[List[String]] = {
+      if (args.isEmpty) Nil
+      else args.toList :: listOfLists(args.toList.tail: _*)
+    }
 
-    /*
+
     listOfLists("Hello", "World") should be (List(List("Hello", "World"), List("World")))
     listOfLists("Hello", "There", "World") should be (List(List("Hello", "There", "World"), List("There", "World"), List("World")))
-    */
+
 
     // is this implementation of listOfLists properly recursive? If not, why not?
   }
 
   test ("URL cleaner") {
     def urlClean(urlAsString : String) : URL = {
-      new URL(urlAsString)
+      try {
+        new URL(urlAsString)
+      } catch {
+        case _: MalformedURLException => new URL("http://badurl.com")
+      }
     }
 
     // fix the method above to catch a malformed URL and replace it with a URL made out of
@@ -134,7 +150,12 @@ class Module05 extends KoanSuite with Matchers with SeveredStackTraces {
     // anything else should return the same value with "Not " in front of it - e.g. A Lot should return Not A Lot
     // Use pattern matching
 
-    def oppositeOf(item: String) = item
+    def oppositeOf(item: String) = item match {
+      case "Hot" => "Cold"
+      case "North" => "South"
+      case "Cool" => "Square"
+      case others => s"Not $others"
+    }
 
     oppositeOf("North") should be ("South")
     oppositeOf("Hot") should be ("Cold")
