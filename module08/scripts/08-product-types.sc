@@ -22,7 +22,7 @@ triplet2.productArity
 triplet2.productElement(2)
 triplet2.productPrefix
 
-val tup3 = (1, '2', "three")
+val tup3: Tuple3[Int, Char, String] = (1, '2', "three")
 
 tup3.productIterator.toList
 tup3.productArity

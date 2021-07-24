@@ -1,6 +1,6 @@
 import java.time.LocalDate
 
-case class Car(make: String, model: String, year: Int) {
+case class Car (make: String, model: String, year: Int) {
   lazy val isVintage: Boolean =
     LocalDate.now.getYear - year > 20
 }

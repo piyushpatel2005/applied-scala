@@ -8,3 +8,12 @@ implicit class TimesDo(val i: Int) extends AnyVal {
   println("hello")
 }
 
+
+implicit class Repeat(val s: String) extends AnyVal {
+  def repeated(fn: String => Unit): String = {
+    fn(s * 4)
+    s * 4
+  }
+}
+
+"helllo" repeated println

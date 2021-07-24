@@ -21,7 +21,9 @@ trait Convertible extends Car {
 
 class ClassicConvertible(
   val color: String, val vintage: Int, val poweredTop: Boolean
-) extends Car with Classic with Convertible
+) extends Car with Classic with Convertible {
+  override def describe = s"final ${super.describe}"
+}
 
 val mustang = new ClassicConvertible("red", 1965, false)
 

@@ -23,6 +23,9 @@ d1.floor
 d2.ceil
 d2.round
 
+val i = 3
+i.floor
+
 val str = "hello"
 str.reverse
 str.toSeq

@@ -21,3 +21,21 @@ ia.asInstanceOf[Int]
 sa.isInstanceOf[String]
 sa.asInstanceOf[String]
 // sa.asInstanceOf[Int]
+
+case class Person (firstName: String, lastName: String)
+
+object Person {
+//  def apply(first: String, second: String): Person = {
+//    println(s"Creating person $first $second")
+//    this(first, second)
+//  }
+
+  def apply(name: String): Person = {
+    this(name.split(" ")(0), name.split(" ")(1))
+  }
+}
+
+val person = Person("Py Patel")
+person.##
+
+1.2 formatted "%d"
