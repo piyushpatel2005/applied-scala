@@ -15,25 +15,30 @@ class Module10 extends FunSuite with Matchers with SeveredStackTraces {
     // you should be able to fix each with just one import source line
 
     // java.sql.Date
-    /* sql.Date.valueOf("2010-8-12").toString should be ("2010-08-12") */
+    import java.sql
+    sql.Date.valueOf("2010-8-12").toString should be ("2010-08-12")
 
     // java.io.File and java.io.FileReader (don't forget the exception as well - in the same package)
-    /* intercept[FileNotFoundException] {
+    import java.io.{File, FileReader, FileNotFoundException}
+    intercept[FileNotFoundException] {
       (new FileReader(new File("Hello.txt")))
-    } */
+    }
 
     // Figure this one out for yourself
-    /* List(1,2,3) should be (List(1,2,3)) */
+    List(1,2,3) should be (List(1,2,3))
     // (OK, so it's already imported in package scala.)
 
     // rename java.lang.Math to M
-    /* M.PI should be (3.14159 +- 0.00001) */
+    import java.lang.{Math => M}
+    M.PI should be (3.14159 +- 0.00001)
 
     // scala.collection.immutable.ListSet
-    /* (new immutable.ListSet[String]).isEmpty should be (true) */
+    import scala.collection.{mutable, immutable}
+    (new immutable.ListSet[String]).isEmpty should be (true)
 
     // scala.collection.mutable.HashMap
-    /* (new mutable.HashMap[String, Int]).put("One", 1) should be (None) */ // put returns the old value, if any
+//    import scala.collection.mutable
+    (new mutable.HashMap[String, Int]).put("One", 1) should be (None) // put returns the old value, if any
 
     // the previous two tests can actually be satisfied with just one import in a couple of different ways
     // so remove the import from the last test, and try some options with the previous import to make it
@@ -46,15 +51,15 @@ class Module10 extends FunSuite with Matchers with SeveredStackTraces {
     // equals or hashcode methods.
 
     class Complex(r: Int, i: Int) {
-      private[this] val rl = r
-      private[this] val im = i
+      private val rl = r
+      private val im = i
 
       override def toString = "" + rl + " + " + im + "i"
 
       // uncomment out the line in the equals, make it work without changing the line, or the test
       override def equals(other: Any) = {
         other match {
-          // case c: Complex => (rl == c.rl) && (im == c.im)
+           case c: Complex => (rl == c.rl) && (im == c.im)
           case _ => false
         }
       }
@@ -76,10 +81,16 @@ class Module10 extends FunSuite with Matchers with SeveredStackTraces {
     class ExerciseWheel {
       private def turn() = "Squeak, squeak, squeak"
 
+      class Hamster {
+        def run: String = "Squeak, squeak, squeak"
+      }
+
+      val hammy = new Hamster
+
     }
 
     val wheel = new ExerciseWheel
-    /* wheel.hammy.run should be ("Squeak, squeak, squeak") */
+    wheel.hammy.run should be ("Squeak, squeak, squeak")
   }
 
   test("Shoot a LASER beam") {
@@ -95,7 +106,7 @@ class Module10 extends FunSuite with Matchers with SeveredStackTraces {
     // is called, should return a Gun.Beam with a value "lumens" that is calculated as 10 times the
     // wattage.
 
-    /* import _root_.lab.awesome.laser
+    import _root_.lab.awesome.laser
 
     val highPoweredLaser = new laser.Gun(100)
     val lowPoweredLaser = new laser.Gun(10)
@@ -108,6 +119,6 @@ class Module10 extends FunSuite with Matchers with SeveredStackTraces {
 
     val lowBeam2: lowPoweredLaser.Beam = lowPoweredLaser.shoot()
     lowBeam2.lumens should be (100) // should have same power
-    lowBeam2 should not be (lowBeam1) // but should be separate beams */
+    lowBeam2 should not be (lowBeam1) // but should be separate beams
   }
 }

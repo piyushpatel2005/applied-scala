@@ -31,8 +31,14 @@ class Module11 extends FunSpec with Matchers with MockFactory with PropertyCheck
     // and just expects a single call to close() as well, then test by replacing ??? below with the mock
     // you made.
 
+
     it ("should call a function with the known contents of a file") {
-      val x = withFirstLineOfFile(???)(identity)
+
+      val mockFR = mock[FileReader]
+      (mockFR.nextLine _:() => String).expects().returning("To be or not to be")
+      (mockFR.close _: () => Unit).expects().returning(())
+
+      val x = withFirstLineOfFile(mockFR)(identity)
 
       x should be ("To be or not to be")
     }
@@ -42,8 +48,14 @@ class Module11 extends FunSpec with Matchers with MockFactory with PropertyCheck
     // again replace ??? with the mock you created
 
     it ("should always call close() on the file, even if the file is empty causing a NoSuchElementException") {
+
+      val mockFR = mock[FileReader]
+
+      (mockFR.nextLine _: () => String).expects().throwing(new NoSuchElementException("next on empty iterator"))
+      (mockFR.close _: () => Unit).expects().returning(())
+
       val ex = intercept[NoSuchElementException] {
-        withFirstLineOfFile(???)(identity)
+        withFirstLineOfFile(mockFR)(identity)
       }
 
       ex.getMessage should be ("next on empty iterator")
@@ -72,7 +84,12 @@ class Module11 extends FunSpec with Matchers with MockFactory with PropertyCheck
     val validAlleles = Seq('A','C','G','T','-')
 
     // put generator definition (and supporting functionality) here
-    lazy val seqGen: Gen[String] = ???
+    val chars = Gen.oneOf(validAlleles)
+    
+    lazy val seqGen: Gen[String] = for {
+      n <- Gen.choose(0, 30)
+      seqChars <- Gen.listOfN(n, chars)
+    } yield seqChars.mkString
 
     it ("should return a ratio between 0.0 and 1.0 for any genetic sequence") {
       forAll(seqGen) { sequence =>
