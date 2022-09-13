@@ -13,6 +13,7 @@ matchOption(None)
 val o1 = Some(10)
 val o2: Option[Int] = None
 
+// There are other ways to do this as well
 o1.getOrElse(0)
 o2.getOrElse(0)
 

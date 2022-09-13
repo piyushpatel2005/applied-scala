@@ -82,7 +82,26 @@ object Account {
       // OTHER CASES GO HERE!
       // The next line should also be replaced - it's just to get things to compile, by now you
       // should know why (the rules of scala type inference)
-      case BalanceEnquiry(accountType, accountNum) => 0
+      case OpenAccount(accountType, accountNumber) =>
+        try {
+          getAccount(accountType, accountNumber)
+          throw new IllegalStateException
+        } catch {
+          case e: NoSuchElementException =>
+        }
+        openAccount(accountType, accountNumber)
+
+      case Withdrawal(Savings, accountNumber, amount) if (getAccount(Savings, accountNumber).balance < amount) =>
+        throw new IllegalStateException()
+
+      case Withdrawal(Checking, accountNumber, amount) if (getAccount(Checking, accountNumber).balance + 1000 < amount) =>
+        throw new IllegalStateException()
+
+      case Withdrawal(accountType, accountNumber, amount) => getAccount(accountType, accountNumber).withdrawal(amount)
+
+      case Deposit(accountType, accountNumber, amount) => getAccount(accountType, accountNumber).deposit(amount)
+
+      case BalanceEnquiry(accountType, accountNum) => getAccount(accountType, accountNum).balance
       
       case _ => throw new IllegalArgumentException("Unknown transaction type")
     }

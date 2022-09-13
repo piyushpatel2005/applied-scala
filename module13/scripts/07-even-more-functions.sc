@@ -13,8 +13,16 @@ case class Orange(name: String) extends Fruit
 
 val fruits = List(Apple("Fiji"), Orange("Jaffa"), Apple("Cox's"))
 
+// collect narrows the type as well where as filter would not do that.
 fruits.collect {
   case a: Apple => a
+}
+
+
+
+fruits.filter {
+  case a: Apple => true
+  case _ => false
 }
 
 
@@ -28,6 +36,7 @@ nums.grouped(3).take(5).toList
 nums.sliding(3,2).take(5).toList
 nums.combinations(3).take(5).toList
 nums.permutations.take(5).toList
+nums.combinations(2).take(5).toList
 
 val numsPlusOne = nums.map(_ + 1)
 

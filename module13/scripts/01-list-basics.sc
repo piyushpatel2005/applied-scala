@@ -2,6 +2,9 @@ val oneTwo = List(1,2)
 val threeFour = 3 :: 4 :: Nil
 val oneTwoThreeFour = oneTwo ::: threeFour
 
+// It reuses existing list of elements 3 and 4
+oneTwoThreeFour.tail.tail eq threeFour
+
 
 Vector('a', 'b', 'c').toList
 Set(1.0, 2.0, 3.0).toList
@@ -22,3 +25,6 @@ sizeOfList(xs3)
 List.fill(10)(0)
 List.tabulate(10)(x => x * x)
 List.range(0, 10)
+
+val s1: String = "hello"
+s1.toList

@@ -28,7 +28,16 @@ if (s.isInstanceOf[String]) {
 
 
 // but beware type erasure:
+// wrong way
+def badWithIntStringMap(x: Any): Int = x match {
+  case m: Map[Int, String] => m.head._1 * m.head._1
+  case _ => 0
+}
 
+badWithIntStringMap(Map(1 -> "one"))
+//badWithIntStringMap(Map("One" -> 1))
+
+// correct way
 def withIntStringMap(x: Any): Int = x match {
   case m: Map[_, _] =>
     m.head._1 match {
