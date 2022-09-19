@@ -48,7 +48,40 @@ public class ObtuseJavaLib {
     }
 
     public boolean isNotDefined(String it) {
-        return false;
+        Option<String> something;
+        if (it.isEmpty()) something =  Option.empty();
+        else something = Option.apply(it);
+
+        TryOption tryOpt = new TryOption();
+        return tryOpt.notDefined(something);
     }
+
+    public static class JavaMathObject implements MathNum {
+        private final int number;
+
+        public JavaMathObject(int number) { this.number = number; }
+
+        @Override
+        public int add(int b) {
+            return number + b;
+        }
+
+        @Override
+        public int sub(int a) {
+            return number - a;
+        }
+
+        @Override
+        public int mul(int a) {
+            return number * a;
+        }
+
+        @Override
+        public int div(int a) {
+            return number / a;
+        }
+    }
+
+    public JavaMathObject makeMathObj(int num) { return new JavaMathObject(num); }
 
 }

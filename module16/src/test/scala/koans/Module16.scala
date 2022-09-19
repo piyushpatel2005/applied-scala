@@ -2,6 +2,10 @@ package koans
 
 import org.scalatest.{FunSpec, Matchers, SeveredStackTraces}
 
+import scala.concurrent.{Await, Future}
+import scala.concurrent.duration._
+import scala.concurrent.ExecutionContext.Implicits.global
+
 class Module16 extends FunSpec with Matchers with SeveredStackTraces {
 
   describe ("Calculating Pi") {
@@ -11,7 +15,7 @@ class Module16 extends FunSpec with Matchers with SeveredStackTraces {
 
     class CalcPi {
       // Leave this method as is, i.e. synchronous
-      def draw(iterations: Int): Double = {
+      def draw(iterations: Int): Future[Double] = Future{
         val random = XorRandom.random()
         var ct = 0
         var sum = 0.0
@@ -27,16 +31,19 @@ class Module16 extends FunSpec with Matchers with SeveredStackTraces {
 
       // Make this method return a Future[Vector[Double]] instead so that the implementation
       // can take advantage of multiple cores
-      def draws(n: Int, iterations: Int): Vector[Double] = {
-        (for (_ <- 1 to n) yield draw(iterations)).toVector
+      def draws(n: Int, iterations: Int): Future[Vector[Double]] = {
+        Future.traverse((1 to n).toVector)(_ => draw(iterations))
       }
 
       // This method should call the above and combine the Futures in a way that does
       // not block or await them, returning a Future[Double] itself. We will await the
       // result in the test below.
-      def calc(n: Int, iterations: Int): Double = {
-        val xs = draws(n, iterations)
-        xs.sum / xs.length
+      def calc(n: Int, iterations: Int): Future[Double] = {
+        for {
+          xs <- draws(n, iterations)
+        } yield {
+          xs.sum / xs.length
+        }
       }
     }
 
@@ -45,7 +52,7 @@ class Module16 extends FunSpec with Matchers with SeveredStackTraces {
     // that all of your cores are working when you call this.
     it ("should calculate PI") {
       val calcPi = new CalcPi
-      val pi = calcPi.calc(500, 10000000) * 4
+      val pi = Await.result(calcPi.calc(500, 10000000), 1.minute) * 4
 
       println(pi)
       pi should be (3.141 +- 0.001)

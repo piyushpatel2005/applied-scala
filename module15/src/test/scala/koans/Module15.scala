@@ -12,9 +12,9 @@ class Module15 extends KoanSuite with Matchers with SeveredStackTraces {
   // and get them to compile and pass)
   test ("Convert null from Java to option") {
     val obtuse = new ObtuseJavaLib
-    val c1 = obtuse.getComplement("Fish")
-    val c2 = obtuse getComplement "Horse"   // note use of inline style
-    val c3 = obtuse.getComplement("Chuck Norris")
+    val c1 = Option(obtuse.getComplement("Fish"))
+    val c2 = Option(obtuse getComplement "Horse")   // note use of inline style
+    val c3 = Option(obtuse.getComplement("Chuck Norris"))
 
     c1 should be (Some("Chips"))
     c2 should be (Some("Cart"))
@@ -40,7 +40,9 @@ class Module15 extends KoanSuite with Matchers with SeveredStackTraces {
     // using the above list, and the obtuse doMathFuncOnList method, create a list that is the
     // squares of the one to ten list from java.
 
-    val l2 = Nil
+    import scala.collection.JavaConverters._
+    val l2 = obtuse.doMathFuncOnList(l1, (x: Int) => x * x)
+      .asScala
 
     l2.toList should be (List(1, 4, 9, 16, 25, 36, 49, 64, 81, 100))
   }
@@ -53,7 +55,14 @@ class Module15 extends KoanSuite with Matchers with SeveredStackTraces {
     val obtuse = new ObtuseJavaLib
 
     // fix this method with a suitable implementation
-    def applyFunc(s: Seq[Int], fn: AnyRef): List[Int] = Nil
+    import scala.collection.JavaConverters._
+    def applyFunc(s: Seq[Int], fn: Int => Int): List[Integer] = {
+      val al: List[Integer] = s.toList.map(new java.lang.Integer(_))
+      val mathFunc = new ObtuseJavaLib.MathFunc {
+        def apply(in: Int): Int = fn(in)
+      }
+      obtuse.doMathFuncOnList(al.asJava, mathFunc).asScala.toList
+    }
 
     applyFunc(List(1, 3, 5), (i: Int) => i + 10) should be (List(11, 13, 15))
     applyFunc(Array(6, 7, 8), (i: Int) => i * 2) should be (List(12, 14, 16))
@@ -69,7 +78,7 @@ class Module15 extends KoanSuite with Matchers with SeveredStackTraces {
   }
 
   // uncomment the following and make it work using the guided instructions below
-  /* test ("Use a Scala trait from Java as a concrete instantiated interface") {
+  test ("Use a Scala trait from Java as a concrete instantiated interface") {
     // in the ObtuseJavaLib object, write a method makeMathObj that provides
     // a concrete implementation of the trait MathNum below so that these tests pass
     val obtuse = new ObtuseJavaLib
@@ -79,7 +88,7 @@ class Module15 extends KoanSuite with Matchers with SeveredStackTraces {
     mathObj.sub(2) should be (3)
     mathObj.mul(3) should be (15)
     mathObj.div(2) should be (2)
-  }*/ 
+  }
 }
 
 

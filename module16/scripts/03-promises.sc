@@ -55,6 +55,7 @@ sf.isCompleted
 Await.result(sf, 1.second)
 */
 
+//How to convert Java futures into Scala
 import scala.compat.java8.FutureConverters._
 
 val sf2 = cf.toScala
